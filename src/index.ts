@@ -1,21 +1,18 @@
-import * as BodyParser from 'body-parser';
-import * as cors from 'cors';
-import { Application, NextFunction, Request, Response } from 'express';
-import * as express from 'express';
-import * as jwt from 'express-jwt';
-import * as session from 'express-session';
-import * as helmet from 'helmet';
-import * as mongoose from 'mongoose';
-import * as passport from 'passport';
+import * as BodyParser from "body-parser";
+import * as cors from "cors";
+import { Application, NextFunction, Request, Response } from "express";
+import * as express from "express";
+import * as jwt from "express-jwt";
+import * as session from "express-session";
+import * as helmet from "helmet";
+import * as mongoose from "mongoose";
+import * as passport from "passport";
+import { mongooseConnection, errorHandler } from "./middlewares";
+import { port, mongoUrl, unlessPath, jwtSecret, env } from "./config";
 
-import { unlessPath } from './config/unlessPath';
-import allRoutes from './routes';
+import allRoutes from "./routes";
 
 const server: Application = express();
-const PORT = process.env.PORT || 3000;
-
-// set environment
-const config = require('./config');
 
 /**
  * Node.js body parsing middleware.
@@ -33,7 +30,7 @@ server.use(cors());
 
 // Sessions
 server.use(
-  session({ secret: config.jwtSecret, resave: true, saveUninitialized: true })
+  session({ secret: jwtSecret, resave: true, saveUninitialized: true })
 );
 
 // PassportJS
@@ -47,29 +44,25 @@ server.use(passport.session());
 server.use(helmet());
 
 // Mongoose
-(<any>mongoose).Promise = global.Promise;
-mongoose
-  .connect(config.mongoDB, { useMongoClient: true })
-  .then(() => console.log('Conected on MongoDB'), err => console.log(err));
+server.use(mongooseConnection());
 
 /**
  * Some libs an configs, can run only in development mode.
  */
-if (process.env.NODE_ENV !== 'production') {
+if (env !== "production") {
   /**
    * HTTP request logger middleware for node.js
    * https://github.com/expressjs/morgan
    */
-  const morgan = require('morgan');
-  server.use(morgan('dev'));
-
+  const morgan = require("morgan");
+  server.use(morgan("dev"));
   /**
    * Show documentation on dev mode
    * Show run app client on dev mode
    */
-  server.use('/doc', express.static('src/public/doc'));
-  server.use('/', express.static('src/public/app'));
-  server.use('/app', express.static('src/public/app'));
+  server.use("/doc", express.static("src/public/doc"));
+  server.use("/", express.static("src/public/app"));
+  server.use("/app", express.static("build/public/app"));
 } else {
   // All resources inside `else` statement, will be available only production mode.
 
@@ -77,22 +70,22 @@ if (process.env.NODE_ENV !== 'production') {
    * Show documentation on production mode
    * Show run app client on production mode
    */
-  server.use('/doc', express.static('build/public/doc'));
-  server.use('/', express.static('build/public/app'));
-  server.use('/app', express.static('build/public/app'));
+  server.use("/doc", express.static("build/public/doc"));
+  server.use("/", express.static("build/public/app"));
+  server.use("/app", express.static("build/public/app"));
 
   /**
    * Protect all routes.
    * Routes includes in `./config/unlessPath.ts` don't will be not protected.
    */
-  server.use(jwt({ secret: config.jwtSecret }).unless(unlessPath));
+  server.use(jwt({ secret: jwtSecret }).unless(unlessPath));
 }
 
 // Default error
 server.use(
   (err: ErrorEventHandler, req: Request, res: Response, next: NextFunction) => {
-    if (err.name === 'UnauthorizedError') {
-      res.status(401).send('login Error');
+    if (err.name === "UnauthorizedError") {
+      res.status(401).send("login Error");
     }
   }
 );
@@ -102,14 +95,13 @@ server.use(
  */
 allRoutes(server);
 
+server.use(errorHandler());
 /**
  * Run server on setted port
  * Show wich mode is running
  */
-server.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT} in ${process.env.NODE_ENV} mode.`
-  );
+server.listen(port, () => {
+  console.log(`Server running on port ${port} in ${env} mode.`);
 });
 
 /**

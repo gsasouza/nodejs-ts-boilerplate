@@ -1,16 +1,15 @@
-import { Application } from 'express';
+import { Application } from "express";
 
-import UsersRoutes from './modules/users/routes/index';
+import RealtiesRoutes from "./modules/realties/routes";
 
-const urlBase = '/api/v1';
+const urlBase = "/api/v1";
 
 const allRoutes = (server: Application) => {
-  server.use(`${urlBase}/users`, UsersRoutes);
-
+  server.use(`${urlBase}/realties`, RealtiesRoutes);
   // Default route errorhandler
   server.use(function(req, res, next) {
-    res.status(500).json({
-      status: 500,
+    res.status(404).json({
+      status: 404,
       msg: `Error on route. This route exist?`,
       route: req.originalUrl
     });

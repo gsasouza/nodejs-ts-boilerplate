@@ -1,34 +1,30 @@
 {
   "name": "nodejs-ts",
   "version": "1.0.0",
-  "description": "A simple boilerplate for NodeJS using Typescript projects",
+  "description": "A simple realty api using Node.JS and Typescript",
   "main": "index.js",
   "license": "MIT",
   "author": {
-    "name": "Emerson Luiz",
-    "email": "eluizbr@gmail.com",
-    "url": "https://github.com/eluizbr"
+    "name": "Gabriel souza",
+    "email": "gabrie.ssouza@gmail.com",
+    "url": "https://github.com/gsasouza"
   },
   "engines": {
     "node": "^8.9.1",
     "npm": "5.5.1"
   },
   "scripts": {
-    "heroku-prebuild":
-      "npm install --only=dev && node_modules/.bin/tsc -p . && npm run makeDevDoc",
+    "heroku-prebuild": "npm install --only=dev && node_modules/.bin/tsc -p . && npm run makeDevDoc",
     "dev": "export NODE_ENV='devel' && nodemon --exec ts-node src/index.ts",
-    "prod":
-      "export NODE_ENV='production' && nodemon --exec ts-node src/index.ts",
+    "prod": "export NODE_ENV='production' && nodemon --exec ts-node src/index.ts",
     "build": "tsc -p . && apidoc -i src -o build/public/doc",
     "buildTest": "tsc -p .",
     "makeDoc": "node_modules/.bin/apidoc -i src -o src/public/doc",
     "copyApp": "cd src/public && cp -rfv app ../../build/public",
-    "makeDevDoc":
-      "node_modules/.bin/apidoc -i src -o build/public/doc && npm run copyApp && ls -lisa build/public/",
+    "makeDevDoc": "node_modules/.bin/apidoc -i src -o build/public/doc && npm run copyApp && ls -lisa build/public/",
     "start": "node build/index.js",
     "test": "node_modules/.bin/mocha --opts src/test/mocha.opts",
-    "test:watch":
-      "export PORT='3001' NODE_ENV='devel' && node_modules/.bin/mocha --opts src/test/mocha.opts --watch"
+    "test:watch": "export PORT='3001' NODE_ENV='devel' && node_modules/.bin/mocha --opts src/test/mocha.opts --watch"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
@@ -36,6 +32,7 @@
     "@types/chai": "^4.0.5",
     "@types/compression": "^0.0.35",
     "@types/cors": "^2.8.3",
+    "@types/dotenv-safe": "^4.0.1",
     "@types/express": "^4.0.39",
     "@types/express-jwt": "^0.0.38",
     "@types/express-session": "^1.15.6",
@@ -52,6 +49,7 @@
     "eslint": "^4.11.0",
     "eslint-plugin-prettier": "^2.3.1",
     "mocha": "^4.0.1",
+    "nodemon": "^1.14.9",
     "prettier": "^1.8.2",
     "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
@@ -63,6 +61,7 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
+    "dotenv-safe": "^4.0.4",
     "express": "^4.16.2",
     "express-jwt": "^5.3.0",
     "express-session": "^1.15.6",
