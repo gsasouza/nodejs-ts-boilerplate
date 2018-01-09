@@ -78,7 +78,7 @@ if (env !== "production") {
    * Protect all routes.
    * Routes includes in `./config/unlessPath.ts` don't will be not protected.
    */
-  server.use(jwt({ secret: jwtSecret }).unless(unlessPath));
+  //server.use(jwt({ secret: jwtSecret }).unless(unlessPath));
 }
 
 // Default error
