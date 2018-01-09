@@ -12,7 +12,7 @@
     "apidoc": {
     "title": "Realty API - Gabriel Souza",
     "url" : "https://realty-api.herokuapp.com/api/v1"
-  }
+  },
   "engines": {
     "node": "^8.9.1",
     "npm": "5.5.1"
